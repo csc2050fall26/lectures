@@ -1,7 +1,6 @@
-/* NOTE: This instructs the compiler to textually copy-paste the contents of
- *       "stdio.h" and "add.h" into to this file. Angle brackets indicate a
- *       header in the standard library, whereas quotes indicate a header that
- *       we ourselves created. */
+/* NOTE: These direct the compiler to copy-paste the text within "stdio.h" and
+ *       "add.h" into this file. Note angle brackets are used for headers in the
+ *       standard library; quotes are used for headers of our own. */
 #include <stdio.h>
 #include "add.h"
 

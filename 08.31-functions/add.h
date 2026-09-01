@@ -1,4 +1,4 @@
-/* NOTE: A prototype declares the bare minimum information necessary to call a
- *       function: its name and type signature. Either a function's prototype or
- *       its definition must precede any applications. */
+/* NOTE: This declares the existence of a function that takes two integers and
+ *       returns an integer; this prototype contains the bare minimum info
+ *       needed to call a function: its name and type signature. */
 int add(int, int);
