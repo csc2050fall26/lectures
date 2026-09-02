@@ -5,4 +5,4 @@ add.o: add.c
 	gcc -Wall -Wextra -Werror -std=c89 -pedantic -c add.c
 
 test.o: test.c add.h
-	gcc -Wall -Wextra -Werror -std=c89 -pedantic -c test.c
+	gcc -Wall -Wextra -Wno-literal-conversion -Werror -std=c89 -pedantic -c test.c
