@@ -5,6 +5,11 @@ void swap(int *, int *);
 int main(void) {
     int z = 1, w = 2;
 
+    /* NOTE: NULL is equivalent to 0 and guaranteed to be an invalid address
+     *       for data; the following is undefined and will likely cause a
+     *       segmentation fault attempting to dereference null pointers.
+     * swap(NULL, NULL); */
+
     /* NOTE: By passing the addresses of "z" and "w" rather than their values,
      *       we tell the "swap" function *where* they can be found in memory
      *       rather than *what* they are... */
