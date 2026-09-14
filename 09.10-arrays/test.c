@@ -12,15 +12,17 @@ int main(void) {
      *       in-place rather than returning a new copy of the array. */
     reverse(arr, 4);
 
-    /* NOTE: Arrays are simply contiguous blocks of memory, so indexing out-of-
-     *       bounds is simply accessing an otherwise unrelated area of memory,
-     *       which may or may not actually be accessible and may or may not
-     *       actually contain something meaningful.
+    /* NOTE: Arrays are simply stored as contiguous blocks of memory. Indexing
+     *       an array out-of-bounds simply accesses memory outside that block,
+     *       which may or may not get or set some seemingly random, unrelated
+     *       value elsewhere in memory.
      * reverse(arr, 5); */
 
-    reverse(arr, 65536);
-
-    reverse(arr, 4);
+    /* NOTE: However, straying sufficiently far outside the bounds of an array
+     *       will likely lead to a segmentation fault. We can then recompile
+     *       with "-g" and run the program through GDB in order to provide a
+     *       traceback of how that error occurred.
+     * reverse(arr, 65536); */
 
     printf("arr: %p\n", (void *)arr);
     printf(" |- %p: %d\n", (void *)&arr[0], arr[0]);
