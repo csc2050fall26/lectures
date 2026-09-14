@@ -20,6 +20,8 @@ int main(void) {
 
     reverse(arr, 65536);
 
+    reverse(arr, 4);
+
     printf("arr: %p\n", (void *)arr);
     printf(" |- %p: %d\n", (void *)&arr[0], arr[0]);
     printf(" |- %p: %d\n", (void *)&arr[1], arr[1]);
