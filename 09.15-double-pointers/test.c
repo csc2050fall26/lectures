@@ -1,25 +1,24 @@
 #include <stdio.h>
 
-/* NOTE: Since the value of an array is the address of its first element, the
- *       value of an array of pointers must be the address of its first "inner"
- *       pointer, which decays into a double pointer when passed as argument.
- *       The below is equivalent to "*(*(mat + 1) + 0) = 5". */
+/* NOTE: The value of an array of pointers is the address of its first pointer,
+ *       which decays into a double pointer. Note that array and pointer
+ *       syntaxes are largely interchangeable */
 void f(int **mat) {
-    mat[1][0] = 5;
+    mat[1][0] = 5; /* Interchangeable with "*(*(mat + 1) + 0) = 5". */
 }
 
 /* NOTE: Two-dimensional arrays are stored in "row-major order"; the compiler
  *       must know the length of each "inner" array in order to do the indexing
- *       math. Note function "g" only works on (n x 2) arrays. */
+ *       math, which means this function only works on (n x 2) arrays. */
 void g(int mat[][2]) {
-    mat[1][0] = 6;
+    mat[1][0] = 6; /* Equivalent to "*(mat + 1 * 2 + 0) = 6". */
 }
 
 /* NOTE: Here, the compiler thinks "mat" is just an ordinary integer pointer,
  *       but we happen to know that it will actually be a pointer to the first
  *       element in an (n x m) array, and we can do the indexing ourselves. */
 void h(int *mat, int m) {
-    *(mat + (1 * m) + 0) = 7;
+    *(mat + (1 * m) + 0) = 7; /* Equivalent to "mat[1][0] = 6". */
 }
 
 int main(void) {
