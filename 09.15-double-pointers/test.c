@@ -1,8 +1,9 @@
 #include <stdio.h>
 
-/* NOTE: The value of an array of pointers is the address of its first "inner"
- *       pointer, which decays into a double pointer. Note the below is
- *       equivalent to: *(*(mat + 1) + 0) = 5; */
+/* NOTE: Since the value of an array is the address of its first element, the
+ *       value of an array of pointers must be the address of its first "inner"
+ *       pointer, which decays into a double pointer when passed as argument.
+ *       The below is equivalent to "*(*(mat + 1) + 0) = 5". */
 void f(int **mat) {
     mat[1][0] = 5;
 }
