@@ -14,6 +14,23 @@ int main(void) {
     printf(" |- %p: %d\n", (void *)&arr[0], arr[0]);
     printf(" +- %p: %d\n", (void *)&arr[1], arr[1]);
 
+    /* NOTE: It is not possible to free a portion of a block...
+     * free(arr + 1); */
+
+    /* NOTE: ...and it makes no sense to free a block that isn't on the heap...
+     * free(&arr); */
+
+    /* NOTE: ...but never freeing a block is a leak... */
+    free(arr);
+
+    /* NOTE: ...so each block must be freed exactly once...
+     * free(arr); */
+
+    /* NOTE: ...and a block should not be accessed after it is freed.
+     * printf("arr: %p\n", (void *)arr);
+     * printf(" |- %p: %d\n", (void *)&arr[0], arr[0]);
+     * printf(" +- %p: %d\n", (void *)&arr[1], arr[1]); */
+
     return 0;
 }
 
