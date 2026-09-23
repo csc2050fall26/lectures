@@ -20,10 +20,10 @@ int main(void) {
     /* NOTE: ...and it makes no sense to free a block that isn't on the heap...
      * free(&arr); */
 
-    /* NOTE: ...but failing to free an allocated block is a leak... */
+    /* NOTE: ...but failing to free a block on the heap is a leak... */
     free(arr);
 
-    /* NOTE: ...so each allocated block must be freed *exactly* once...
+    /* NOTE: ...so each block on the heap must be freed *exactly* once...
      * free(arr); */
 
     /* NOTE: ...and once a block is freed, its data is not zeroed out, so it
@@ -37,14 +37,14 @@ int main(void) {
 }
 
 int *pair(int first, int second) {
-    /* NOTE: Since the value of an array is the address of its first element,
-     *       returning an array returns the address of memory that has been
-     *       deallocated and may be overwritten in the future.
+    /* NOTE: Since the value of an array is an address, returning a local array
+     *       is really just returning garbage: it's the address of local memory
+     *       that is about to be popped off of the runtime stack.
      * int arr[2]; */
 
-    /* NOTE: "malloc" returns a pointer to a contiguous block of memory of the
-     *       requested size on the heap, and since pointer and array syntax is
-     *       largely interchangeable, that block can then be indexed. */
+    /* NOTE: Instead, "malloc" returns a pointer to a dynamically allocated
+     *       block of memory on the heap; since pointer and array syntax is
+     *       largely interchangeable, we can then index that block. */
     int *arr = (int *)malloc(sizeof(int) * 2);
 
     arr[0] = first;
@@ -54,9 +54,9 @@ int *pair(int first, int second) {
 }
 
 void f(void) {
-    /* NOTE: Since "f" has the same locals as "pair", and since "f" is called
-     *       by the same function as "pair", in all likelihood this local array
-     *       will reuse the same memory as the one above. */
+    /* NOTE: Since "f" contains the same locals and is called in essentially
+     *       the same place as "pair", in all likelihood, the array below will
+     *       end up reusing and overwriting the memory of the array above. */
     int arr[2] = {0};
 
     (void)arr;
