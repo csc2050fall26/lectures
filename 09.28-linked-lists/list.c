@@ -1,15 +1,18 @@
 #include <stdlib.h>
 #include "list.h"
 
-static void ndestroy(Node *node);
-static void *nget(Node *, int);
-static void nset(Node *, int, void *);
-static Node *nadd(Node *, int, void *);
-static Node *nremove(Node *, int);
-
 /* lstcreate: Creates an empty linked list. */
 List *lstcreate(void) {
-    return NULL;
+    List *lst = (List *)malloc(sizeof(List));
+
+    /* NOTE: Since we don't know how many lists or nodes we will need until
+     *       runtime, they will have to be allocated on the heap. That memory
+     *       on the heap must be initialized before the List is returned; it
+     *       is not necessarily zeroed out. */
+    lst->head = NULL;
+    lst->size = 0;
+
+    return lst;
 }
 
 /* lstdestroy: Destroys an existing linked list. */
