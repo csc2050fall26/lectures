@@ -5,6 +5,6 @@ struct Pair {
     int second;
 };
 
-/* NOTE: The above defines a new type "struct Pair"; the below gives that type
- *       the alternative name "Pair". */
+/* NOTE: The above defines a new type "struct Pair"; the below then gives that
+ *       new type the alternative name "Pair". */
 typedef struct Pair Pair;

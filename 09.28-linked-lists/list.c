@@ -3,12 +3,12 @@
 
 /* lstcreate: Creates an empty linked list. */
 List *lstcreate(void) {
-    List *lst = (List *)malloc(sizeof(List));
-
     /* NOTE: Since we don't know how many lists or nodes we will need until
      *       runtime, they will have to be allocated on the heap. That memory
      *       on the heap must be initialized before the List is returned; it
      *       is not necessarily zeroed out. */
+    List *lst = (List *)malloc(sizeof(List));
+
     lst->head = NULL;
     lst->size = 0;
 
@@ -20,19 +20,19 @@ void lstdestroy(List *lst) {
     Node *tmp = lst->head, *next;
 
     /* NOTE: We might call whomever allocates memory the "owner" of that memory;
-     *       here, we allocated each Node, and thus we "own" those Nodes and are
-     *       responsible for deallocating them. In contrast, we "borrowed" the
-     *       values, and we don't even know where they are allocated. */ 
+     *       we allocated and "own" each Node, and thus we are responsible for
+     *       deallocating them. In contrast, we "borrowed" the values; we don't
+     *       know how they are allocated and shouldn't deallocate them. */ 
     while (tmp != NULL) {
         next = tmp->next;
         free(tmp);
         tmp = next;
     }
 
-    /* NOTE: The standard library doesn't know what we plan to do with allocated
-     *       memory; it doesn't know that "lst" points to a List, and that once
-     *       a List is deallocated, we have no way of accessing its Nodes, which
-     *       thus also ought to be deallocated first. */
+    /* NOTE: The standard library has no way of knowing that this block of
+     *       memory represents a linked list, and thus that it would make no
+     *       sense to deallocate the List but none of its Nodes; we must
+     *       deallocate the nodes ourselves first. */
     free(lst);
 }
 
