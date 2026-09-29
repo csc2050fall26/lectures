@@ -8,7 +8,7 @@ List *lstcreate(void) {
      *       they will need to be dynamically allocated on the heap; note that
      *       memory is not automatically zeroed out. */
     List *lst = (List *)malloc(sizeof(List));
-    
+
     lst->head = NULL;
     lst->size = 0;
 
@@ -17,6 +17,23 @@ List *lstcreate(void) {
 
 /* lstdestroy: Destroys an existing linked list. */
 void lstdestroy(List *lst) {
+    Node *tmp = lst->head, *next;
+
+    /* NOTE: We "own" the list and its nodes; we allocated them, and thus we
+     *       are responsible for deallocating them. In contrast, we merely
+     *       "borrowed" the values; we don't know how they were allocated, and
+     *       thus we have no business attempting to deallocate them. */
+    while (tmp != NULL) {
+        next = tmp->next;
+        free(tmp);
+        tmp = next;
+    }
+
+    /* NOTE: The standard library has no way of knowing what heap memory was
+     *       used for -- it doesn't know that within a List are pointers to
+     *       Nodes that should not exist outside of a List, so we have to
+     *       deallocate those Nodes ourselves first. */
+    free(lst);
 }
 
 /* lstget: Gets an element in a linked list. */
@@ -31,6 +48,31 @@ int lstset(List *lst, int idx, void *val) {
 
 /* lstadd: Adds an element to a linked list. */
 int lstadd(List *lst, int idx, void *val) {
+    Node *node = (Node *)malloc(sizeof(Node));
+    node->val = val;
+    node->next = NULL;
+
+    if (idx == 0) {
+        node->next = lst->head;
+        lst->head = node;
+    }
+    else {
+        Node *tmp = lst->head;
+        int i;
+
+        for (i = 0; i < idx - 1; i++) {
+            tmp = tmp->next;
+        }
+
+        node->next = tmp->next;
+        tmp->next = node;
+    }
+
+    lst->size++;
+
+    /* NOTE: Since there are no exceptions in C, if something goes wrong (e.g.,
+     *       an index out-of-bounds or a lack of available memory on the heap),
+     *       we would instead return non-zero to indicate the error. */
     return 0;
 }
 
