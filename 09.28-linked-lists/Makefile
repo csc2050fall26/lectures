@@ -7,9 +7,9 @@ list.o: list.c list.h
 debug: list.c list.h
 	gcc -Wall -Wextra -std=c89 -pedantic -g -c list.c
 
-# NOTE: As we are testing and debugging, we should be periodically running our
-# 		tests through Valgrind, so as to detect and address any potential
-# 		memory usage issues as soon as possible.
+# NOTE: As we are incrementally testing and debugging, we should periodically
+# 		run our tests through Valgrind, so as to detect and address any memory
+# 		usage issues as soon as possible.
 test: debug
 	gcc -Wall -Wextra -std=c89 -pedantic -g listtests.c list.o
 	valgrind --leak-check=full --show-leak-kinds=all ./a.out

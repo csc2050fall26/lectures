@@ -4,9 +4,9 @@
 /* lstcreate: Creates an empty linked list. */
 List *lstcreate(void) {
     /* NOTE: Since we don't know how many lists or nodes we will need until
-     *       runtime, they will have to be allocated on the heap. That memory
-     *       on the heap must be initialized before the List is returned; it
-     *       is not necessarily zeroed out. */
+     *       runtime, and we need them to persist after this function returns,
+     *       they will need to be dynamically allocated on the heap; note that
+     *       that memory is not automatically zeroed out. */
     List *lst = (List *)malloc(sizeof(List));
 
     lst->head = NULL;
@@ -22,17 +22,17 @@ void lstdestroy(List *lst) {
     /* NOTE: We might call whomever allocates memory the "owner" of that memory;
      *       we allocated and "own" each Node, and thus we are responsible for
      *       deallocating them. In contrast, we "borrowed" the values; we don't
-     *       know how they are allocated and shouldn't deallocate them. */ 
+     *       know how they were allocated and shouldn't deallocate them. */
     while (tmp != NULL) {
         next = tmp->next;
         free(tmp);
         tmp = next;
     }
 
-    /* NOTE: The standard library has no way of knowing that this block of
-     *       memory represents a linked list, and thus that it would make no
-     *       sense to deallocate the List but none of its Nodes; we must
-     *       deallocate the nodes ourselves first. */
+    /* NOTE: The standard library has no way of knowing what heap memory was
+     *       used for -- it doesn't know that within a List are pointers to
+     *       Nodes that should not exist outside of a List, so we have to
+     *       deallocate those Nodes ourselves first. */
     free(lst);
 }
 
@@ -71,9 +71,9 @@ int lstadd(List *lst, int idx, void *val) {
     lst->size++;
 
     /* NOTE: Since "lst" was passed as a pointer, we don't need to return a new
-     *       copy of the list; rather, if we cared to check for indices out-of-
-     *       bounds, we could return something other than 0 to indicate an
-     *       error. */
+     *       copy of the list; rather, if something goes wrong (e.g., an index
+     *       out-of-bounds or a lack of available memory on the heap), we could
+     *       return something other than 0 to indicate an error. */
     return 0;
 }
 

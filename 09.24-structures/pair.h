@@ -1,5 +1,5 @@
-/* NOTE: Like classes, structures group related variables together both for
- *       readability and also for performance. */
+/* NOTE: Like classes, structures define new types by grouping related
+ *       variables together for both performance and readability. */
 struct Pair {
     int first;
     int second;
