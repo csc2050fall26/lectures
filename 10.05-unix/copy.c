@@ -1,21 +1,32 @@
-#include <stdio.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <unistd.h>
 
-#define SIZE 128
+#define SIZE 4096
 
 int main(int argc, char *argv[]) {
     char buf[SIZE];
-    int n;
-    FILE *src, *dest;
+    int n, src, dest;
 
-    src = fopen(argv[1], "r");
-    dest = fopen(argv[2], "w");
+    /* NOTE: The system call "open" requests that the OS open a file; it passes
+     *       along only the bare minimum information required by the OS, no
+     *       extras that can be done without the OS, and returns a "file
+     *       descriptor", essentially an index into the "open file table". */
+    src = open(argv[1], O_RDONLY);
+    dest = open(argv[2], O_WRONLY | O_CREAT | O_TRUNC,
+                S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 
-    while ((n = fread(buf, sizeof(char), SIZE, src)) > 0) {
-        fwrite(buf, sizeof(char), n, dest);
+    /* NOTE: Although they look like function calls, system calls take longer,
+     *       since they have to transfer control to/from the OS. By increasing
+     *       the size of the buffer, we decrease the number of system calls,
+     *       thereby decreasing the running time. */
+    while ((n = read(src, buf, sizeof(char) * SIZE)) > 0) {
+        write(dest, buf, sizeof(char) * n);
     }
 
-    fclose(src);
-    fclose(dest);
+    close(src);
+    close(dest);
 
     return 0;
 }
