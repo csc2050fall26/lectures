@@ -1,11 +1,11 @@
-# NOTE: Now that we arguably do actually know what we are doing, we should have
-# 		the freedom to ignore warnings and use all of the latest features.
+# NOTE: Now that we actually know what we are doing, we should have the freedom
+# 		to ignore warnings and to make use of all the latest features.
 CFLAGS = -Wall -Wextra -std=gnu17 -pedantic
 
 all: copy fcopy
 
-# NOTE: When debugging, we want to use the default flags with the addition of
-# 		-g, and we want to recompile from scratch every time.
+# NOTE: When debugging, we want to include any extra debug information and
+#       always recompile from scratch.
 debug: CFLAGS += -g
 debug: clean all
 
@@ -20,7 +20,5 @@ fcopy: fcopy.o
 %.o: %.c
 	gcc $(CFLAGS) -c $<
 
-# NOTE: Often, when debugging, we want to periodically delete any existing
-# 		object files, just to be sure we aren't using older code.
 clean:
 	rm -f *.o

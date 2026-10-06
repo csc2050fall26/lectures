@@ -9,10 +9,10 @@ int main(int argc, char *argv[]) {
     char buf[SIZE];
     int n, src, dest;
 
-    /* NOTE: The system call "open" requests that the OS open a file; it passes
-     *       along only the bare minimum information required by the OS, no
-     *       extras that can be done without the OS, and returns a "file
-     *       descriptor", essentially an index into the "open file table". */
+    /* NOTE: The system call "open" passes along only the bare minimimum info.
+     *       needed to request that the OS open a file and returns an integer
+     *       "file descriptor", essentially just an index into a behind-the-
+     *       scenes "open file table". */
     src = open(argv[1], O_RDONLY);
     dest = open(argv[2], O_WRONLY | O_CREAT | O_TRUNC,
                 S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
@@ -25,6 +25,9 @@ int main(int argc, char *argv[]) {
         write(dest, buf, sizeof(char) * n);
     }
 
+    /* NOTE: The open file table has some fixed size, so if we leak file
+     *       descriptors by only ever opening files and never closing them,
+     *       we will eventually run out. */
     close(src);
     close(dest);
 
