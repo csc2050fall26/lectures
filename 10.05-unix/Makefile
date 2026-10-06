@@ -4,8 +4,8 @@ CFLAGS = -Wall -Wextra -std=gnu17 -pedantic
 
 all: copy fcopy
 
-# NOTE: When debugging, we want to include any extra debug information and
-#       always recompile from scratch.
+# NOTE: When we build for debugging purposes, we want to include extra debug
+# 		information and always recompile from scratch.
 debug: CFLAGS += -g
 debug: clean all
 
@@ -15,8 +15,8 @@ copy: copy.o
 fcopy: fcopy.o
 	gcc -o fcopy fcopy.o
 
-# NOTE: This essentially says that compiling any object file requires the C
-#       source file of the same name.
+# NOTE: To build an object file, we always want to compile the source file of
+# 		the same name (just with a different extension).
 %.o: %.c
 	gcc $(CFLAGS) -c $<
 
