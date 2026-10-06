@@ -1,5 +1,9 @@
 #include <stdio.h>
 
+/* NOTE: Standard library functions like "fread" still have to call "read", but
+ *       they add additional common functionality. For example, "fread" will
+ *       read more data than we asked for and save the excess in a secret
+ *       buffer, so as to avoid calling "read" again in the future. */
 #define SIZE 128
 
 int main(int argc, char *argv[]) {
