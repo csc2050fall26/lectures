@@ -14,12 +14,12 @@ int main(int argc, char* argv[]) {
     int n;
     FILE *src, *dest;
 
-    /* NOTE: In UNIX, all I/O appears to be file I/O; to print an error message,
-     *       we instead write to "stderr", one of the "files" that pretend to
-     *       be the terminal. If a system call fails, it will set the global
-     *       "errno", and "perror" can then be used to print a message. */
+    /* NOTE: In UNIX, all I/O appears to be file I/O; if we want to print an
+     *       error message, we request that the OS write to "stderr", one of
+     *       the files representing the terminal, rather than needed to learn
+     *       any terminal-specific system calls. */
     if (argc != 3) {
-        fprintf(stderr, "usage: ./pack SRC DEST\n");
+        fprintf(stderr, "usage: ./pack SOURCE DESTINATION\n");
         return EXIT_FAILURE;
     }
 
@@ -56,10 +56,22 @@ int main(int argc, char* argv[]) {
 unsigned char stob(char *bits) {
     unsigned char byte = 0, mask;
 
-    /* NOTE: This function needs to "pack" the characters of "bits" into the
-     *       individual bits of "byte", which can be set using bitwise OR; note
-     *       that "bits" is indexed left-to-right, but "byte" is indexed right-
-     *       to-left; index 0 of "bits" is bit 7 of "byte". */
+    /* NOTE: This function needs to "pack" the bits indicated by "bits" into
+     *       "byte". Note that index 0 of "bits" corresponds to bit 7 of "byte".
+     *
+     *       Given:
+     *        bits = "00100001"
+     *        byte = 0b00000000
+     *        mask = 0b10000000
+     *       ...on the second iteration, we have:
+     *        bits = "0100001"
+     *        byte = 0b00000000
+     *        mask = 0b01000000
+     *
+     *       ...once the '1' in "mask" is shifted off the end to the right, we
+     *       have packed all of the bits.
+     *       */
+
     for (mask = 1 << 7; mask > 0; mask >>= 1) {
         if (*bits++ == '1') {
             byte |= mask;
