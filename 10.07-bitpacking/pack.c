@@ -56,23 +56,22 @@ int main(int argc, char* argv[]) {
 unsigned char stob(char *bits) {
     unsigned char byte = 0, mask;
 
-    /* NOTE: This function needs to "pack" the bits indicated by "bits" into
-     *       "byte". Note that index 0 of "bits" corresponds to bit 7 of "byte".
+    /* NOTE: This function needs to pack the bits of "bits" into "byte"; note
+     *       index 0 of "bits" corresponds to bit 7 of "byte".
      *
      *       Given:
      *        bits = "00100001"
      *        byte = 0b00000000
      *        mask = 0b10000000
-     *       ...on the second iteration, we have:
+     *       ... after the first iteration, we have:
      *        bits = "0100001"
      *        byte = 0b00000000
      *        mask = 0b01000000
      *
-     *       ...once the '1' in "mask" is shifted off the end to the right, we
-     *       have packed all of the bits.
-     *       */
+     *       ...once the '1' in "mask" gets shifted off the right side, "mask"
+     *       will be 0, which is how we know we have packed all of the bits. */
 
-    for (mask = 1 << 7; mask > 0; mask >>= 1) {
+    for(mask = 1 << 7; mask > 0; mask >>= 1) {
         if (*bits++ == '1') {
             byte |= mask;
         }
