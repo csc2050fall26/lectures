@@ -13,10 +13,11 @@ int main(int argc, char *argv[]) {
      *       printing error messages as appropriate. */
     stat(argv[1], &buf);
 
-    /* NOTE: In UNIX, each file is implemented by exactly one "inode" containing
-     *       various metadata about the file as well as the locations of its
-     *       data blocks -- note files do not actually have names; they are
-     *       uniquely identified by their device-inode-number pairs. */
+
+    /* NOTE: In UNIX, each file is implemented by exactly one inode, containing
+     *       various metadata as well as the locations of the file's blocks on
+     *       disk -- note that files do not actually have names; file's names
+     *       are mapped to device-inode-number pairs by their directories. */
     printf("%s:\n", argv[1]);
     printf("    device: %ld\n", buf.st_dev);
     printf("    inode:  %lu\n", buf.st_ino);
