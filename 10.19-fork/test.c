@@ -1,3 +1,4 @@
+#include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -9,9 +10,40 @@
 int fsearch(char *, char *);
 
 int main(int argc, char *argv[]) {
-    int status = EXIT_FAILURE;
+    int status = EXIT_FAILURE, tmp, i;
+    pid_t child;
 
-    status = fsearch(argv[2], argv[1]);
+    /* NOTE: "fork" creates a child process by duplicating the now-parent
+     *       process -- the child will receive a copy of the parent's memory,
+     *       which means the child will be executing the same instructions;
+     *       essentially, "fork" is called once and it returns twice. */
+
+    for (i = 2; i < argc; i++) {
+        if ((child = fork()) == 0) {
+            printf("Process %d is the child of %d.\n", getpid(), getppid());
+            exit(fsearch(argv[i], argv[1]));
+        }
+        else {
+            printf("Process %d is the parent of %d.\n", getpid(), child);
+        }
+    }
+
+    /* NOTE: It is the parent's responsibility to "wait" for its children; note
+     *       that some of the child's resources can't be deallocated until its
+     *       parent "wait"s for it. In order to parallelize the children, here
+     *       we need to "fork" all the children first before "wait"ing. */
+
+    for (i = 2; i < argc; i++) {
+        child = wait(&tmp);
+
+        if (WIFEXITED(tmp)) {
+            status = status || WEXITSTATUS(tmp);
+            printf("Child %d terminated, status %d.\n", child, WEXITSTATUS(tmp));
+        }
+        else {
+            printf("Child %d terminated abnormally.\n", child);
+        }
+    }
 
     return status;
 }
