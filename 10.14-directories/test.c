@@ -22,10 +22,10 @@ int main(int argc, char *argv[]) {
      *       interpret their contents for us. */
     dir = opendir(".");
 
-    /* NOTE: The entries in a directory are not necessarily stored in any
-     *       particular order; if we need to list them in some order, then we
-     *       have to read them into an array and sort them first. Note only a
-     *       filename and its inode number are guaranteed to be in an entry. */
+    /* NOTE: The only information guaranteed to be in an entry is a filename and
+     *       its inode number, which can then be used to "stat" the file. Note
+     *       also that the entries are in no particular order; if we care about
+     *       the order, then we have to sort them ourselves. */
     while ((entry = readdir(dir)) != NULL) {
         stat(entry->d_name, &buf);
         printf("%s -> %lu (%ld bytes)\n",
