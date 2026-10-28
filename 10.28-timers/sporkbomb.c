@@ -20,7 +20,7 @@ int main(void) {
     }
     else {
         printf("Process %d is the parent of %d.\n", getpid(), child);
-        child = wait(&status);
+        child = wait(&tmp);
 
         if (WIFEXITED(tmp)) {
             status = status || WEXITSTATUS(tmp);
