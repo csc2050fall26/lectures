@@ -3,23 +3,23 @@
 #include <stdio.h>
 
 void handler(int signum) {
-    /* NOTE: Since a signal is asynchronous, we cannot predict when its handler
-     *       ought to be called; a handler effectively has no caller, and thus
-     *       it cannot take additional arguments or return any values... */
+    /* NOTE: Since we cannot predict when an asynchronous signal will occur, we
+     *       also cannot predict when to call its handler, which effectively
+     *       has no caller; it can't take more arguments or return values... */
 
     if (signum == SIGINT) {
-        printf("But MARIE lets their processes stay up on the CPU as long as they want!\n");
+        printf("But SOPHIA lets their processes stay up on the CPU as long as they want!\n");
     }
     else if (signum == SIGQUIT) {
-        printf("But LAURA lets their processes eat RAM before dinner!\n");
+        printf("But MASON lets their processes eat RAM before dinner!\n");
     }
     else {
         printf("Handling signal %d...\n", signum);
     }
 
     /* NOTE: ...it also shouldn't call async-signal-unsafe functions such as
-     *       "printf", which depend on the state of memory which cannot be
-     *       predicted at the time the signal occurs. */
+     *       "printf", which depend on the state of memory whose contents
+     *       cannot be predicted at the time the signal occurs. */
 }
 
 int main(void) {
@@ -41,9 +41,9 @@ int main(void) {
     sigaction(SIGSTOP, &action, NULL);
     sigaction(SIGKILL, &action, NULL);
 
-    /* NOTE: Simply installing a signal handler does not necessarily mean that
-     *       the signal will occur. In practice, we would presumably go off and
-     *       do something else while waiting for a signal. */
+    /* NOTE: Installing a handler does not necessarily mean the signal will
+     *       occur; in practice, we ought to go off and do something useful
+     *       here, but we need to do something while waiting... */
     while (1);
 
     return EXIT_SUCCESS;
