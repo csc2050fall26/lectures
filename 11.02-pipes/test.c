@@ -28,7 +28,7 @@ int main(void) {
          *       child by reading from the pipe. */
         while ((n = read(fds[0], buf, SIZE)) > 0) {
             buf[n] = '\0';
-            printf("%d read \"%s\" from the pipe.\n", getpid(), buf);
+            printf("Process %d read \"%s\" from the pipe.\n", getpid(), buf);
         }
 
         close(fds[0]);
@@ -46,10 +46,11 @@ int main(void) {
          *       can use our existing read/write system calls. */
         write(fds[1], "Hello, child!", 13);
 
-        /* NOTE: By closing the write end of the pipe, we indicate to our child
-         *       that we are done using this pipe; we will not be writing any
-         *       more data in the future. */
+        /* NOTE: By closing the write end of a pipe, we indicate to the OS (and
+         *       thus to any other process that may be reading from the pipe)
+         *       that we will not be sending more data in the future. */
         close(fds[1]);
+
         child = wait(&tmp);
 
         if (WIFEXITED(tmp)) {
