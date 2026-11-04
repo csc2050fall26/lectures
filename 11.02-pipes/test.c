@@ -10,9 +10,9 @@ int main(void) {
     int status = EXIT_SUCCESS, tmp, fds[2];
     pid_t child;
 
-    /* NOTE: Create a pipe; this must be done before creating the child
-     *       process, which will inherit access by virtue of being a duplicate
-     *       of the parent, since pipes are not exposed via the file system. */
+    /* NOTE: Since pipes are not actually stored on disk, this pipe must be
+     *       created before forking the child, so that the child can inherit
+     *       access by virtue of being a duplicate of the parent. */
     pipe(fds);
 
     if ((child = fork()) == 0) {
@@ -37,8 +37,8 @@ int main(void) {
         printf("Process %d is the parent of %d.\n", getpid(), child);
 
         /* NOTE: With pipes, closing unused file descriptors is not just a
-         *       matter of best practice to avoid leaking resources; its how we
-         *       indicate that we are done with a pipe. */
+         *       matter of cleanliness to avoid leaking resources; its how we
+         *       notify other processes that we are done with a pipe. */
         close(fds[0]);
 
         /* NOTE: In UNIX, all I/O appears to be file I/O, and pipes are no
