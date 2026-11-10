@@ -10,10 +10,10 @@ int main(void) {
     int status = EXIT_SUCCESS, tmp, ptoc[2], ctop[2];
     pid_t child;
 
-    /* NOTE: In theory, we could do this with a single pipe if we were very
-     *       careful about coordinating exactly which process read and wrote
-     *       and when, but in practice it is much easier to just make two
-     *       separate pipes. */
+    /* NOTE: In theory, we could do this with a single pipe, if we were very
+     *       careful about coordinating exactly which process read/wrote and
+     *       when; in practice, it's much easier to make two pipes: one for
+     *       parent-to-child and one for child-to-parent. */
 
     pipe(ptoc);
     pipe(ctop);
@@ -49,17 +49,18 @@ int main(void) {
 
         printf("Process %d is the parent of %d.\n", getpid(), child);
 
-        /* NOTE: We now have two processes that are both expecting to read and
-         *       to write, but they can't both read first, otherwise they will
-         *       be "deadlocked" waiting for data that only the other is
-         *       capable of writing. */
-
         close(ptoc[0]);
         close(ctop[1]);
         write(ptoc[1], "parent\n", 7);
         close(ptoc[1]);
 
+        /* NOTE: We now have two processes that are both expecting to read and
+         *       to write, but they can't both read first, otherwise they will
+         *       be "deadlocked" waiting for data that only the other is
+         *       capable of writing. */
+
         while ((n = read(ctop[0], buf, SIZE)) > 0) {
+            buf[n] = '\0';
             printf("Process %d read \"%s\" from a pipe.\n", getpid(), buf);
         }
 
