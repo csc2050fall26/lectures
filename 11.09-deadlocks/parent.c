@@ -10,10 +10,10 @@ int main(void) {
     int status = EXIT_SUCCESS, tmp, ptoc[2], ctop[2];
     pid_t child;
 
-    /* NOTE: In theory, we could do this with a single pipe, if we were very
-     *       careful about coordinating exactly which process read/wrote and
-     *       when; in practice, it's much easier to make two pipes: one for
-     *       parent-to-child and one for child-to-parent. */
+    /* NOTE: In theory, we could do all of this with a single pipe if we were
+     *       very careful to coordinate who read and who wrote and when; in
+     *       practice, it's a lot easier to just make two pipes: one for
+     *       parent-to-child data and one for child-to-parent data. */
 
     pipe(ptoc);
     pipe(ctop);
@@ -21,10 +21,10 @@ int main(void) {
     if ((child = fork()) == 0) {
         printf("Process %d is the child of %d.\n", getpid(), getppid());
 
-        /* NOTE: In the child, replace stdin/stdout with the appropriate ends
-         *       of pipes; note that stderr is left unchanged so that any
-         *       error messages will still be visible to the user instead of
-         *       being captured by a pipe. */
+        /* NOTE: The child executable has no way of knowing of the existence of
+         *       these pipes. By replacing stdin/stdout with the appropriate
+         *       ends of those pipes, we can "trick" the child into using them;
+         *       note stderr is unchanged so errors are still visible. */
 
         dup2(ptoc[0], STDIN_FILENO);
         dup2(ctop[1], STDOUT_FILENO);
