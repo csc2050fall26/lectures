@@ -7,10 +7,11 @@
 int main(int argc, char *argv[]) {
     struct addrinfo hints = {0}, *addrs, *addr;
 
-    /* NOTE: This program, the client, will actively try to connect to the
-     *       server that is already running; this requires knowing the server's
-     *       address and port. Here, we request a 32-bit TCP/IPv4 address,
-     *       typically the most common setting. */
+    /* NOTE: This program, the client, will actively attempt to connect to the
+     *       server, which requires knowing the server's address and port. Note
+     *       this requests an address suitable for a TCP/IPv4 connection, which
+     *       is typically the most common setting.*/
+
     hints.ai_family = AF_INET;
     hints.ai_socktype = SOCK_STREAM;
     getaddrinfo(argv[1], argv[2], &hints, &addrs);
@@ -19,6 +20,7 @@ int main(int argc, char *argv[]) {
      *       addresses, "getaddrinfo" produces a dynamically allocated linked
      *       list of addresses for us to try; it is our responsibility to
      *       deallocate that list once we are done. */
+
     addr = addrs;
     while (addr != NULL) {
         uint32_t ipaddr = ntohl(

@@ -3,8 +3,8 @@
 
 int main(int argc, char *argv[]) {
     
-    /* NOTE: This program, the server, will already be running on a different
-     *       computer, passively waiting for clients to attempt to connect. */
+    /* NOTE: This program, the server, will already be up and running; it will
+     *       passively wait for clients to connect to it. */
 
     return EXIT_SUCCESS;
 }
