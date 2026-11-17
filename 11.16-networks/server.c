@@ -2,6 +2,8 @@
 #include <stdio.h>
 
 int main(int argc, char *argv[]) {
+    /* NOTE: This program, the server, will already be up and running; it will
+     *       passively wait for clients to connect to it. */
 
     return EXIT_SUCCESS;
 }
