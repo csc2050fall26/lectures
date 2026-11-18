@@ -8,18 +8,18 @@ int main(int argc, char *argv[]) {
     struct addrinfo hints = {0}, *addrs, *addr;
 
     /* NOTE: This program, the client, will actively attempt to connect to the
-     *       server, which requires knowing the server's address and port. Note
-     *       this requests an address suitable for a TCP/IPv4 connection, which
-     *       is typically the most common setting.*/
+     *       server, which requires knowing the server's address and port. This
+     *       requests a 32-bit IPv4 address suitable for a TCP connection,
+     *       which is the most typical setting. */
 
     hints.ai_family = AF_INET;
     hints.ai_socktype = SOCK_STREAM;
     getaddrinfo(argv[1], argv[2], &hints, &addrs);
 
-    /* NOTE: Since it is generally possible for a device to have multiple
-     *       addresses, "getaddrinfo" produces a dynamically allocated linked
-     *       list of addresses for us to try; it is our responsibility to
-     *       deallocate that list once we are done. */
+    /* NOTE: Since it is possible that the server has multiple addresses,
+     *       "getaddrinfo" produces a pointer to the head of a dynamically
+     *       allocated linked list of addresses for us to try, which we are
+     *       responsible for deallocating once we are done. */
 
     addr = addrs;
     while (addr != NULL) {
@@ -35,9 +35,10 @@ int main(int argc, char *argv[]) {
         addr = addr->ai_next;
     }
 
-    /* NOTE: None of this opens a connection to the server or even guarantees
-     *       that a connection, if attempted, would be successful. It simply
-     *       obtains the information necessary to try to open a connection. */
+    /* NOTE: None of the above code actually opens a connection to the server
+     *       or even guarantees that a connection, if attempted, would be
+     *       successful. It simply obtains the information necessary to try to
+     *       open a connection. */
 
     freeaddrinfo(addrs);
     return EXIT_SUCCESS;
