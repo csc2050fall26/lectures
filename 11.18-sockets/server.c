@@ -1,5 +1,6 @@
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <unistd.h>
 #include <netdb.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -21,23 +22,27 @@ int main(int argc, char *argv[]) {
     hints.ai_flags = AI_PASSIVE;
     getaddrinfo(NULL, argv[1], &hints, &addr);
 
-    /* NOTE: In order for the client to connect to the server, the client must
-     *       know the server's port, so the server must additionally bind its
-     *       socket to a known port. */
+    /* NOTE: Since the client needs to know the server's address and port in
+     *       order to establish a connection, the server's socket will need to
+     *       be bound to some known port number. */
 
     fd = socket(addr->ai_family, addr->ai_socktype, addr->ai_protocol);
     bind(fd, addr->ai_addr, addr->ai_addrlen);
     listen(fd, 1);
 
-    /* NOTE: Accepting a connection creates a new serverside socket connected
-     *       to the client, so that the original socket remains bound and
-     *       listening for any new connections. */
+    /* NOTE: If the server cared to know information about a client, such as
+     *       its IP address, we could pass pointers to structures to "accept",
+     *       which would be populated with the client's information. */
 
     client = accept(fd, NULL, NULL);
 
-    while((n = read(client, buf, SIZE)) > 0) {
+    /* NOTE: Accepting a connection creates a new socket connected to the
+     *       client's socket, so that the server's original socket remains
+     *       bound and listening for new connections. */
+
+    while ((n = read(client, buf, SIZE)) > 0) {
         buf[n] = '\0';
-        printf("Read \"%s\" from a client.\n", buf);
+        printf("Read \"%s\" from the client socket.\n", buf);
     }
 
     close(client);

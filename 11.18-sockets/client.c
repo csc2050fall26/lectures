@@ -1,5 +1,6 @@
 #include <sys/types.h>
 #include <sys/socket.h>
+#include <unistd.h>
 #include <netdb.h>
 #include <unistd.h>
 #include <stdlib.h>
@@ -26,17 +27,17 @@ int main(int argc, char *argv[]) {
     connect(fd, addr->ai_addr, addr->ai_addrlen);
 
     /* NOTE: Due to network limitations, it is possible that the entire buffer
-     *       cannot be sent at once, in which case "write" will return the
-     *       number of bytes written and we must try again later. */
+     *       cannot be sent at once, in which case it is our responsibility to
+     *       try sending the rest later. */
 
     i = 0;
     while (i < 14) {
         i += write(fd, buf + i, 14 - i);
     }
 
-    /* NOTE: In POSIX, all I/O appears as file I/O, and sockets are no
-     *       exception. Just as with pipes, closing sockets is how we indicate
-     *       that we do not intend to send or receive any more data. */
+    /* NOTE: In POSIX, all I/O is file I/O, and sockets are no exception. Just
+     *       as with pipes, closing sockets is how we indicate that we will not
+     *       be sending or receiving any more data. */
 
     close(fd);
     freeaddrinfo(addr);
