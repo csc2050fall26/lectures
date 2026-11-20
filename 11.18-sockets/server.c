@@ -23,22 +23,22 @@ int main(int argc, char *argv[]) {
     getaddrinfo(NULL, argv[1], &hints, &addr);
 
     /* NOTE: Since the client needs to know the server's address and port in
-     *       order to establish a connection, the server's socket will need to
-     *       be bound to some known port number. */
+     *       order to establish a connection, the server's socket must be bound
+     *       to a specific, predetermined port number. */
 
     fd = socket(addr->ai_family, addr->ai_socktype, addr->ai_protocol);
     bind(fd, addr->ai_addr, addr->ai_addrlen);
     listen(fd, 1);
 
-    /* NOTE: If the server cared to know information about a client, such as
-     *       its IP address, we could pass pointers to structures to "accept",
-     *       which would be populated with the client's information. */
+    /* NOTE: If the server needed to know information about the client, such as
+     *       its IP address, it could pass pointers to structures to "accept",
+     *       which would be populated with that information. */
 
     client = accept(fd, NULL, NULL);
 
-    /* NOTE: Accepting a connection creates a new socket connected to the
-     *       client's socket, so that the server's original socket remains
-     *       bound and listening for new connections. */
+    /* NOTE: When a connection is accepted, a new socket is created to
+     *       communicate with the client, leaving the original socket bound and
+     *       listening for any new connections. */
 
     while ((n = read(client, buf, SIZE)) > 0) {
         buf[n] = '\0';
